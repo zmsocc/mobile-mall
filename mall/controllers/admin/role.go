@@ -9,7 +9,7 @@ import (
 	"github.com/zmsocc/mobile-mall/mall/models"
 )
 
-type RoleController struct{
+type RoleController struct {
 	BaseController
 }
 
@@ -35,10 +35,10 @@ func (c RoleController) DoAdd(ctx *gin.Context) {
 		return
 	}
 	roleList := models.Role{
-		Title: title,
+		Title:       title,
 		Description: description,
-		Status: 1,
-		AddTime: time.Now().Unix(),
+		Status:      1,
+		AddTime:     time.Now().Unix(),
 	}
 	err := models.DB.Create(&roleList).Error
 	if err != nil {
@@ -94,4 +94,62 @@ func (c RoleController) Delete(ctx *gin.Context) {
 	role := models.Role{Id: id}
 	models.DB.Delete(&role)
 	c.Success(ctx, "成功删除数据", "/admin/role")
+}
+
+func (c RoleController) Auth(ctx *gin.Context) {
+	// 获取角色 id
+	roleId, err := models.Int(ctx.Query("id"))
+	if err != nil {
+		c.Error(ctx, "传入数据错误", "/admin/role")
+		return
+	}
+	// 获取所有的权限
+	accessList := []models.Access{}
+	models.DB.Where("module_id=?", 0).Preload("AccessItem").Find(&accessList)
+	
+	// 获取当前角色拥有的权限，并把权限 id 放在一个 map 对象里面
+	roleAccess := []models.RoleAccess{}
+	models.DB.Where("role_id=?", roleId).Find(&roleAccess)
+	roleAccessMap := make(map[int]int)
+	for _, v := range roleAccess {
+		roleAccessMap[v.AccessId] = v.AccessId
+	}
+
+	// 循环遍历所有的权限数据，判断当前的权限的 id 是否在角色权限的 Map 对象中，如果是的话，给当前数据加入 checked 属性
+	for i := 0; i < len(accessList); i++ {
+		if _, ok := roleAccessMap[accessList[i].Id]; ok {
+			accessList[i].Checked = true
+		}
+		for j := 0; j < len(accessList[i].AccessItem); j++ {
+			if _, ok := roleAccessMap[accessList[i].AccessItem[j].Id]; ok {
+			accessList[i].AccessItem[j].Checked = true
+			}
+		}
+	}
+
+	ctx.HTML(http.StatusOK, "admin/role/auth.html", gin.H{
+		"roleId":     roleId,
+		"accessList": accessList,
+	})
+}
+
+func (c RoleController) DoAuth(ctx *gin.Context) {
+	roleId, err := models.Int(ctx.PostForm("role_id"))
+	if err != nil {
+		c.Error(ctx, "传入数据错误", "/admin/role")
+		return
+	}
+	// 获取权限 id 切片
+	accessIds := ctx.PostFormArray("access_node[]")
+	// 删除当前角色对应的权限
+
+	// 增加数据
+	roleAccess := models.RoleAccess{}
+	for _, v := range accessIds {
+		roleAccess.RoleId = roleId
+		accessId, _ := models.Int(v)
+		roleAccess.AccessId = accessId
+		models.DB.Create(&roleAccess)
+	}
+	ctx.String(http.StatusOK, "DoAUth")
 }
