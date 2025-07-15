@@ -59,6 +59,7 @@ func (c RoleController) Edit(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "admin/role/edit.html", gin.H{
 		"role": role,
 	})
+	c.Success(ctx, "编辑角色成功", "/admin/role/edit")
 }
 
 func (c RoleController) DoEdit(ctx *gin.Context) {
