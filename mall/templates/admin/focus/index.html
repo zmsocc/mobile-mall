@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     {{if ne $value.FocusImg ""}}
-                        <img src="/{{$value.FocusImg}}" width="100"  />
+                        <img src="/{{$value.FocusImg}}" height="100"  />
                     {{end}}
                 </td>
                 <td>{{$value.Link}}</td>
@@ -46,8 +46,8 @@
                     {{end}}
                 </td>
                 <td class="text-center">
-                    <a href="/admin/focus/edit?id={{$value.Id}}" />修改</a>
-                    <a class="delete" href="/admin/focus/delete?id={{$value.Id}}" />删除</a>
+                    <a href="/admin/focus/edit?id={{$value.Id}}">修改</a>
+                    <a class="delete" href="/admin/focus/delete?id={{$value.Id}}">删除</a>
                 </td>
             </tr>
             {{end}}

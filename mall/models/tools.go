@@ -94,13 +94,10 @@ func UploadImg(ctx *gin.Context, picName string) (string, error) {
 	day := GetDay()
 	dir := "./static/upload/" + day
 	// 创建目录
-	err = os.Mkdir(dir, 0666)
-	if err != nil {
-		return "", errors.New("MKdir失败")
-	}
+	_ = os.Mkdir(dir, 0666)
 
 	// 4.生成文件名称和文件保存的目录， 111111111.jpg
-	fileName := strconv.FormatInt(GetUnixMilli(), 10) + extName 
+	fileName := strconv.FormatInt(GetUnix(), 10) + extName 
 
 	// 5.执行上传
 	dst := path.Join(dir, fileName)

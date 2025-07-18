@@ -1,0 +1,4 @@
+# github.com/zmsocc/mobile-mall/mall/controllers/admin
+controllers\admin\focus.go:129:17: not enough arguments in call to c.Success
+	have (*gin.Context, string)
+	want (*gin.Context, string, string)
