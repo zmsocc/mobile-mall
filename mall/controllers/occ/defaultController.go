@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/zmsocc/mobile-mall/mall/models"
 )
 
 type DefaultController struct{}
@@ -21,7 +22,7 @@ func (con DefaultController) Index(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "default/index.html", gin.H{
 		"msg": "我是一个msg",
-		"t":   1629788418,
+		"t":   models.GetUnix(),
 	})
 }
 func (con DefaultController) News(c *gin.Context) {
