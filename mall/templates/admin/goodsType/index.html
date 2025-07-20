@@ -32,10 +32,10 @@
                                         <img src="/static/admin/images/no.gif"  class="chStatus" data-id="{{$value.Id}}" data-table="goods_type" data-field="status" />
                                 {{end}}
                             </td>
-                            <td class="text-center">                               
+                            <td class="text-center">                   
+                                <a href="/admin/goodsTypeAttribute?id={{$value.Id}}">类型属性</a> 　            
                                 <a href="/admin/goodsType/edit?id={{$value.Id}}">修改</a> 　
-                                <a class="delete"
-                                    href="/admin/goodsType/delete?id={{$value.Id}}">删除</a>
+                                <a class="delete" href="/admin/goodsType/delete?id={{$value.Id}}">删除</a>
                             </td>
                         </tr>
                         {{end}}
