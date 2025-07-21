@@ -1,15 +1,15 @@
 package models
 
 type GoodsTypeAttribute struct {
-	Id         int
-	CateId     int
-	Title      string
-	AttrType   int
-	AttrValue  string
-	Status     int
-	Sort       int
-	AddTime    int64
-	UpdateTime int64
+	Id         int    `json:"id"`
+	CateId     int    `json:"cate_id"`
+	Title      string `json:"title"`
+	AttrType   int    `json:"attr_type"`
+	AttrValue  string `json:"attr_value"`
+	Status     int    `json:"status"`
+	Sort       int    `json:"sort"`
+	AddTime    int64  `json:"add_time"`
+	UpdateTime int64  `json:"update_time"`
 }
 
 func (GoodsTypeAttribute) TableName() string {

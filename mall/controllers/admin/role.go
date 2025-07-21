@@ -143,14 +143,15 @@ func (c RoleController) DoAuth(ctx *gin.Context) {
 	// 获取权限 id 切片
 	accessIds := ctx.PostFormArray("access_node[]")
 	// 删除当前角色对应的权限
-
-	// 增加数据
 	roleAccess := models.RoleAccess{}
+	models.DB.Where("role_id = ?", roleId).Delete(&roleAccess)
+	
+	// 增加当前角色对应的权限
 	for _, v := range accessIds {
 		roleAccess.RoleId = roleId
 		accessId, _ := models.Int(v)
 		roleAccess.AccessId = accessId
 		models.DB.Create(&roleAccess)
 	}
-	ctx.String(http.StatusOK, "DoAUth")
+	c.Success(ctx, "授权成功", "/admin/role/auth?id="+models.String(roleId))
 }

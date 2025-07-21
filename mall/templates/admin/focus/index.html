@@ -28,32 +28,36 @@
                     {{else}}
                     小程序
                     {{end}}
+
                 </td>
                 <td>
                     {{if ne $value.FocusImg ""}}
-                        <img src="/{{$value.FocusImg}}" height="100"  />
+                        <img src="/{{$value.FocusImg}}" width="200"  />
                     {{end}}
                 </td>
                 <td>{{$value.Link}}</td>
                 <td class="text-center">
-                    <span class="chSpanNum" data-id="{{$value.Id}}" data-table="focus" data-field="sort" data-num="{{$value.Sort}}">{{$value.Sort}}</span> 
+                    <span class="chSpanNum" data-id="{{$value.Id}}" data-table="focus" data-field="sort">{{$value.Sort}}</span>
                 </td>
                 <td align="center">
                     {{if eq $value.Status 1}}
-                    <img class="chStatus" data-id="{{$value.Id}}" data-table="focus" data-field="status" src="/static/admin/images/yes.gif" />
+                        <img class="chStatus" data-id="{{$value.Id}}" data-table="focus" data-field="status" src="/static/admin/images/yes.gif" />
                     {{else}}
-                    <img class="chStatus" data-id="{{$value.Id}}" data-table="focus" data-field="status" src="/static/admin/images/no.gif" />
+                        <img class="chStatus"  data-id="{{$value.Id}}" data-table="focus" data-field="status" src="/static/admin/images/no.gif" />
                     {{end}}
                 </td>
                 <td class="text-center">
-                    <a href="/admin/focus/edit?id={{$value.Id}}">修改</a>
-                    <a class="delete" href="/admin/focus/delete?id={{$value.Id}}">删除</a>
+                    <a href="/admin/focus/edit?id={{$value.Id}}" />修改</a>
+                    <a class="delete" href="/admin/focus/delete?id={{$value.Id}}" />删除</a>
                 </td>
             </tr>
             {{end}}
+
             </tbody>
         </table>
     </div>
+
 </body>
 </html>
+
 {{end}}
