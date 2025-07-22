@@ -1,2 +1,0 @@
-# github.com/zmsocc/mobile-mall/mall/routers
-routers\adminRouters.go:76:61: admin.GoodsController{}.D undefined (type admin.GoodsController has no field or method D)

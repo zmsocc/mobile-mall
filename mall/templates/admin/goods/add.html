@@ -68,23 +68,19 @@
                               </div>
                               <div role="tabpanel" class="tab-pane" id="detail">
       
-                                  <textarea name="content" id="content" cols="100" rows="8"></textarea>
+                                  <textarea name="goods_content" id="content" cols="100" rows="8"></textarea>
 
                               </div>
                               <div role="tabpanel" class="tab-pane" id="mix">
                                       
                                       <ul class="form_input">
-      
-                                              <li> <span>商品颜色:</span>                                                  
-
+                                            <li> <span>商品颜色:</span>                                                  
                                                 {{range $key,$value := .goodsColorList}}
                                                     <input type="checkbox" value="{{$value.Id}}" name="goods_color" id="color_{{$value.Id}}"/> 
                                                     <label for="color_{{$value.Id}}">{{$value.ColorName}}</label>   
                                                     &nbsp; 
-                                                 {{end}}
-                                               
-                                               </li>                
-              
+                                                {{end}}
+                                            </li>                
                                                <li> <span>关联商品:</span>
                                                   
                                                       <input type="text" name="relation_goods" class="relation_goods"/>  <i>填写关联商品的id 多个以逗号隔开 格式：23,24,39</i>
@@ -104,14 +100,18 @@
               
               
                                               <li> <span>更多属性:</span>
-                                                  
-                                                      <input type="text" name="goods_attr" class="goods_attr"/>  <i> 格式:  颜色:红色,白色,黄色 | 尺寸:41,42,43</i>
-                                                  
+                                                    <input type="text" name="goods_attr" class="goods_attr"/>  <i> 格式:  颜色:红色,白色,黄色 | 尺寸:41,42,43</i>
+                                              </li>
+                                              <li> <span>SEO关键词:</span>
+                                                    <input type="text" name="goods_keywords" />
+                                              </li>
+                                              <li> <span>SEO描述:</span>
+                                                    <textarea name="goods_desc" id="goods_desc" cols="30" rows="10"></textarea>
                                               </li>
                                        
                                              
                                                
-                                              
+                                               
                                       </ul>
                               </div>
                               <div role="tabpanel" class="tab-pane" id="attribute">

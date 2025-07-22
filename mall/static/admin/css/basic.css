@@ -122,5 +122,20 @@ input[type=file]{
 #photoUploader{
     margin: 20px auto;
     width: 200px;
+}
 
+.goods_image_list{
+    border: 1px solid #eee;
+}
+
+.goods_image_list li{
+    width: 120px;
+    float: left;
+    margin-right: 10px;
+    border-bottom: none;
+    position: relative;
+}
+
+.goods_image_list li img{
+    width: 120px;
 }

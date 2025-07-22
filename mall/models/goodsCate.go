@@ -14,7 +14,7 @@ type GoodsCate struct {
 	Sort           int
 	AddTime        int64
 	UpdateTime     int64
-	GoodsCateItems []GoodsCate `gorm:"foreignKey:Pid;references:Id"`
+	GoodsCateItems []GoodsCate `gorm:"foreignKey:pid;references:Id"`
 }
 
 func (GoodsCate) TableName() string {

@@ -27,8 +27,8 @@ type Goods struct {
 	GoodsTypeId   int
 	Sort          int
 	Status        int
-	AddTime       int
-	UpdateTime    int
+	AddTime       int64
+	UpdateTime    int64
 }
 
 func (Goods) TableName() string {
