@@ -131,11 +131,39 @@ input[type=file]{
 .goods_image_list li{
     width: 120px;
     float: left;
-    margin-right: 10px;
+    margin-right: 20px;
     border-bottom: none;
     position: relative;
+    text-align: center;
 }
 
 .goods_image_list li img{
     width: 120px;
+}
+
+/* 修改图库的布局 */
+.goods_image_list li .color_list{
+    margin-top: 20px;
+}
+
+.goods_image_list li .goods_image_delete{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.goods_image_list li .goods_image_delete{
+    width: 40px;
+    height: 40px;
+    background: url('/static/diyUpload/images/x_alt.png') no-repeat center center;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    cursor: pointer;
+}
+
+#pagination{
+    float: right;
 }

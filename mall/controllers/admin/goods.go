@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 	"strings"
 	"sync"
@@ -17,10 +18,24 @@ type GoodsController struct {
 }
 
 func (c GoodsController) Index(ctx *gin.Context) {
+	// 当前页数
+	page, _ := models.Int(ctx.Query("page"))
+	if page == 0 {
+		page = 1
+	}
+	// 每页查询的数量
+	pageSize := 5
 	goodsList := []models.Goods{}
-	models.DB.Find(&goodsList)
+	models.DB.Offset((page-1)*pageSize).Limit(pageSize).Find(&goodsList)
+	
+	// 获取总数量
+	var count int64
+	models.DB.Table("goods").Count(&count)
+
 	ctx.HTML(http.StatusOK, "admin/goods/index.html", gin.H{
 		"goodsList": goodsList,
+		"totalPages": math.Ceil(float64(count)/float64(pageSize)),
+		"page": page,
 	})
 }
 
@@ -407,5 +422,67 @@ func (c GoodsController) GoodsTypeAttribute(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true, 
 		"result": goodsTypeAttributeList,
+	})
+}
+
+// 修改商品图库关联的颜色
+func (c GoodsController) ChangeGoodsImageColor(ctx *gin.Context) {
+	// 获取图片 id，获取颜色 id
+	goodsImageId, err := models.Int(ctx.Query("goods_image_id"))
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"result":"获取goods_image_id失败",
+			"success": false,
+		})
+		return
+	}
+	colorId, err := models.Int(ctx.Query("color_id"))
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"result":"获取color_id失败",
+			"success": false,
+		})
+		return
+	}
+	goodsImage := models.GoodsImage{Id: goodsImageId}
+	models.DB.Find(&goodsImage)
+	goodsImage.ColorId = colorId
+	err = models.DB.Save(&goodsImage).Error
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"result":"更新失败",
+			"success": false,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"result":"更新成功",
+		"success": true,
+	})
+}
+
+// 删除图库
+func (c GoodsController) RemoveGoodsImage(ctx *gin.Context) {
+	// 获取图片 id
+	goodsImageId, err := models.Int(ctx.Query("goods_image_id"))
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"result":"获取数据失败",
+			"success": false,
+		})
+		return
+	}
+	goodsImage := models.GoodsImage{Id: goodsImageId}
+	err = models.DB.Delete(&goodsImage).Error
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"result":"删除图库失败",
+			"success": false,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"result":"删除图库成功",
+		"success": true,
 	})
 }

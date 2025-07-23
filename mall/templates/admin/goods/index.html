@@ -1,5 +1,6 @@
 {{ define "admin/goods/index.html" }}
 {{ template "admin/public/page_header.html" .}}
+<script type="text/javascript" src="/static/admin/js/jqPaginator.js"></script>
 
 <div class="container-fluid">
     <div class="row">
@@ -85,11 +86,24 @@
                     </tbody>
                 </table>
             </div>
+            <div class="pagination" id="pagination"></div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
+<script>
+    $('#pagination').jqPaginator({
+        totalPages: {{.totalPages}},
+        visiblePages: 5,
+        currentPage: {{.page}},
+        onPageChange: function(num, type) {
+            console.log(num, type)
+            if(type!='init') {
+                location.href="/admin/goods?page="+num;
+            }
+        }
+    });
+</script>
 
 {{end}}
