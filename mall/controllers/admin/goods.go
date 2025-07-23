@@ -23,19 +23,40 @@ func (c GoodsController) Index(ctx *gin.Context) {
 	if page == 0 {
 		page = 1
 	}
+
+	// 获取 keyword
+	keyword := ctx.Query("keyword")
+	where := "is_delete=0"
+	if len(keyword) > 0 {
+		where += " AND title like \"%" + keyword + "%\""
+	}
+
 	// 每页查询的数量
 	pageSize := 5
 	goodsList := []models.Goods{}
-	models.DB.Offset((page-1)*pageSize).Limit(pageSize).Find(&goodsList)
+	models.DB.Where(where).Offset((page-1)*pageSize).Limit(pageSize).Find(&goodsList)
 	
 	// 获取总数量
 	var count int64
-	models.DB.Table("goods").Count(&count)
+	models.DB.Where(where).Table("goods").Count(&count)
 
+	if len(goodsList) == 0 {
+		if page == 1 {
+			ctx.HTML(http.StatusOK, "admin/goods/index.html", gin.H{
+				"goodsList": goodsList,
+				"totalPages": math.Ceil(float64(count)/float64(pageSize)),
+				"page": page,
+				"keyword": keyword,
+			})
+		}
+		ctx.Redirect(302, "/admin/goods")
+		return
+	}
 	ctx.HTML(http.StatusOK, "admin/goods/index.html", gin.H{
 		"goodsList": goodsList,
 		"totalPages": math.Ceil(float64(count)/float64(pageSize)),
 		"page": page,
+		"keyword": keyword,
 	})
 }
 
@@ -222,30 +243,32 @@ func (c GoodsController) Edit(ctx *gin.Context) {
 	goodsAttrStr := ""
 
 	for _, v := range goodsAttr {
-		if v.AttributeType == 1 {
+		switch v.AttributeType {
+		case 1:
 			goodsAttrStr += fmt.Sprintf(`<li><span>%v = </span> <input type="hidden" name="attr_id_list" value="%v" /> <input type="text" name="attr_value_list" value="%v" /></li>`, v.AttributeTitle, v.AttributeId, v.AttributeValue)
-		} else if v.AttributeType == 2 {
+		case 2:
 			goodsAttrStr += fmt.Sprintf(`<li><span>%v = </span> <input type="hidden" name="attr_id_list" value="%v" /> <input type="text" name="attr_value_list" value="%v" /></li>`, v.AttributeTitle, v.AttributeId, v.AttributeValue)
-		} else {
+		default:
 			// 获取当前类型对应的值
 			goodsTypeAttribute := models.GoodsTypeAttribute{Id: v.AttributeId}
 			models.DB.Find(&goodsTypeAttribute)
 			attrValueSlice := strings.Split(goodsTypeAttribute.AttrValue, "\n")
 			goodsAttrStr += fmt.Sprintf(`<li><span>%v = </span> <input type="hidden" name="attr_id_list" value="%v" />`, v.AttributeTitle, v.AttributeId)
-			goodsAttrStr += fmt.Sprintf(`<select name="attr_value_list">`)
+			goodsAttrStr += `<select name="attr_value_list">`
 			for i := 0; i < len(attrValueSlice); i++ {
 				if attrValueSlice[i] == v.AttributeValue {
 					goodsAttrStr += fmt.Sprintf(`<option value="%v" selected>%v</option>`, attrValueSlice[i], attrValueSlice[i])
 				} else {
-					goodsAttrStr += fmt.Sprintf(`<option value="%v">%v</option>`, attrValueSlice)
+					goodsAttrStr += fmt.Sprintf(`<option value="%v">%v</option>`, attrValueSlice[i], attrValueSlice[i])
 				}
 			}
-			goodsAttrStr += fmt.Sprintf(`</select>`)
-			goodsAttrStr += fmt.Sprintf(`</li>`)
+			goodsAttrStr += `</select>`
+			goodsAttrStr += `</li>`
 		}
 	}
-	// goodsTypeList := []models.GoodsType{}
-	// models.DB.Find(&goodsTypeList)
+	
+	// 获取上一页的地址
+	// fmt.Println(ctx.Request.Referer())
 
 	ctx.HTML(http.StatusOK, "admin/goods/edit.html", gin.H{
 		"goods": goods,
@@ -254,6 +277,7 @@ func (c GoodsController) Edit(ctx *gin.Context) {
 		"goodsTypeList": goodsTypeList,
 		"goodsAttrStr": goodsAttrStr,
 		"goodsImageList": goodsImageList,
+		"prevPage": ctx.Request.Referer(),
 	})
 }
 
@@ -263,6 +287,8 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 	if err != nil {
 		c.Error(ctx, "传入id错误", "admin/goods/edit")
 	}
+	// 获取编辑时页面的地址
+	prevPage := ctx.PostForm("prevPage")
 	title := ctx.PostForm("title")
 	subTitle := ctx.PostForm("sub_title")
 	goodsSn := ctx.PostForm("goods_sn")
@@ -383,7 +409,11 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 		wg.Done()
 	}()
 	wg.Wait()
-	c.Success(ctx, "修改数据成功", "/admin/goods")
+	if len(prevPage) == 0 {
+		c.Success(ctx, "修改数据成功", "/admin/goods")	
+		return
+	}
+	c.Success(ctx, "修改数据成功", prevPage)
 }
 
 func (c GoodsController) ImageUpload(ctx *gin.Context) {
@@ -485,4 +515,24 @@ func (c GoodsController) RemoveGoodsImage(ctx *gin.Context) {
 		"result":"删除图库成功",
 		"success": true,
 	})
+}
+
+func (c GoodsController) Delete(ctx *gin.Context) {
+	id, err := models.Int(ctx.Query("id"))
+	if err != nil {
+		c.Error(ctx, "获取id数据失败", "/admin/goods")
+		return
+	}
+	// 软删除
+	goods := models.Goods{Id: id}
+	models.DB.Find(&goods)
+	goods.IsDelete = 1
+	goods.Status = 2
+	models.DB.Save(&goods)
+	prevPage := ctx.Request.Referer()
+	if len(prevPage) == 0 {
+		c.Success(ctx, "删除数据成功", "/admin/goods")
+		return
+	}
+	c.Success(ctx, "删除数据成功", prevPage)
 }
