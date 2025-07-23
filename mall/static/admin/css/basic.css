@@ -58,7 +58,7 @@ table .th{
 }
 
 input[type=file]{
- 	display: inline !important;
+ 	display: inline;
 
 }
 
