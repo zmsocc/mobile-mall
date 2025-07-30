@@ -30,7 +30,7 @@
                                         <input type="file" name="site_logo"/>   
                                         <br />       
                                         {{if ne .setting.SiteLogo ""}}              
-                                        <span></span>    <img style="height:30px" class="pic" src="/{{.setting.SiteLogo}}" />  
+                                        <span></span>    <img style="height:30px" class="pic" src="{{.setting.SiteLogo | FormatImg}}" />  
                                         {{end}}                           
                                      </li>                     
             
@@ -41,7 +41,7 @@
                                     <li><span>商品默认图片:</span>  <input type="file" name="no_picture" />   
                                         <br />                     
                                         {{if ne .setting.NoPicture ""}}
-                                        <span></span> <img class="pic" style="width:80px"  src="/{{.setting.NoPicture}}" />
+                                        <span></span> <img class="pic" style="width:80px"  src="{{.setting.NoPicture | FormatImg}}" />
                                         {{end}}                            
                                     </li> 
                                      <li> <span>备案信息:</span> <input type="text" class="input" name="site_icp" value="{{.setting.SiteIcp}}"/></li>

@@ -1,16 +1,20 @@
 package occ
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+
 	"github.com/gin-gonic/gin"
 	. "github.com/hunterhug/go_image"
 	qrcode "github.com/skip2/go-qrcode"
+	"github.com/zmsocc/mobile-mall/mall/models"
 )
 
 type DefaultController struct{}
 
 func (c DefaultController) Index(ctx *gin.Context) {
+	fmt.Println(models.GetSettingFromColum("SiteTitle"))
 	ctx.String(http.StatusOK, "首页")
 }
 

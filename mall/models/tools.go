@@ -6,12 +6,16 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"mime/multipart"
 	"os"
 	"path"
+	"reflect"
 	"strconv"
 	"time"
 
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/ini.v1"
 )
 
 //时间戳转换成日期
@@ -87,8 +91,45 @@ func Float64(str string) (float64, error) {
 	return n, err
 }
 
+// 通过列获系统设置里面的值
+func GetSettingFromColum(columnName string) string {
+	setting := Setting{}
+	DB.First(&setting)
+	// 反射来获取
+	v := reflect.ValueOf(setting)
+	val := v.FieldByName(columnName).String()
+	return val
+}
+
+// 获取 Oss 的状态
+func GetOssStatus() int{
+	config, iniErr := ini.Load("./conf/app.ini")
+	if iniErr != nil {
+		fmt.Printf("Fail to read file: %v", iniErr)
+		os.Exit(1)
+	}
+	ossStatus := config.Section("oss").Key("status").String()
+	status, _ := Int(ossStatus)
+	return status
+}
+
 // 上传图片
 func UploadImg(ctx *gin.Context, picName string) (string, error) {
+	if GetOssStatus() == 1 {
+		return OssUploadImg(ctx, picName)
+	}
+	return LocalUploadImg(ctx, picName)
+}
+
+// 格式化图片， 判断是否开启了 Oss
+func FormatImg(str string) string {
+	if GetOssStatus() == 1 {
+		return GetSettingFromColum("OssDomain") + str
+	}
+	return "/" + str
+}
+
+func LocalUploadImg(ctx *gin.Context, picName string) (string, error) {
 	// 1.获取上传的文件
 	file, err := ctx.FormFile(picName)
 	if err != nil {
@@ -121,3 +162,62 @@ func UploadImg(ctx *gin.Context, picName string) (string, error) {
 	ctx.SaveUploadedFile(file, dst)
 	return dst, nil
 }
+
+func OssUploadImg(ctx *gin.Context, picName string) (string, error) {
+	// 1.获取上传的文件
+	file, err := ctx.FormFile(picName)
+	if err != nil {
+		return "", errors.New("获取文件失败")
+	}
+
+	// 2.获取后缀名，判断类型是否正确	.jpg .png .gif .jpeg
+	extName := path.Ext(file.Filename)
+	allowExtMap := map[string]bool {
+		".jpg": true,
+		".png": true,
+		".gif": true,
+		".jpeg": true,
+	}
+	if _, ok := allowExtMap[extName]; !ok {
+		return "", errors.New("图片后缀名不合法")
+	}
+
+	// 3.创建图片保存目录， static/upload/20250717
+	day := GetDay()
+	dir := "static/upload/" + day
+
+	// 4.生成文件名称和文件保存的目录， 111111111.jpg
+	fileName := strconv.FormatInt(GetUnixMilli(), 10) + extName 
+
+	// 5.执行上传
+	dst := path.Join(dir, fileName)
+	return OssUpload(file, dst)
+}
+
+// 封装 Oss 上传的方法
+func OssUpload(file *multipart.FileHeader, dst string) (string, error) {
+	// 创建 OssClient 实例
+	client, err := oss.New("oss-cn-beijing.aliyuncs.com", "", "")
+	if err != nil {
+		return "", err
+	}
+	// 获取存储空间
+	bucket, err := client.Bucket("digital-mall-occ")
+	if err != nil {
+		return "", err
+	}
+	// 读取本地文件
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	// 上传文件流
+	err = bucket.PutObject(dst, src)
+	if err != nil {
+		return "", err
+	}
+	return dst, nil
+}
+
