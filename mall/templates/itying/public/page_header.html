@@ -1,0 +1,150 @@
+{{ define "itying/public/page_header.html" }}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <meta name="author" content="order by dede58.com"/>
+		<title>小米商城</title>
+		<link rel="stylesheet" type="text/css" href="static/itying/css/style.css">
+		<link rel="stylesheet" href="static/itying/css/swiper.min.css">
+
+		<script src="static/itying/js/jquery-1.10.1.js"></script>		
+		<script src="static/itying/js/swiper.min.js"></script>
+		<script src="static/itying/js/base.js"> </script>
+
+
+	</head>
+	<body>
+	<!-- start header -->
+		<header>
+			<div class="top center">
+				<div class="left fl">
+					<ul>
+                        {{$temp := .topNavList | len}}
+                        {{$navLen := Sub $temp 1}}
+                        {{range $key,$value := .topNavList}}
+                            <li><a href="{{$value.Link}}" {{if eq $value.IsOpennew 2}} target="_blank" {{end}}>{{$value.Title}}</a></li>
+                            {{if lt $key $navLen}}
+                            <li>|</li>
+                            {{end}}
+                        {{end}}
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="right fr">
+					<div class="gouwuche fr"><a href="">购物车</a></div>
+					<div class="fr">
+						<ul>
+							<li><a href="./login.html" target="_blank">登录</a></li>
+							<li>|</li>
+							<li><a href="./register.html" target="_blank" >注册</a></li>
+							<li>|</li>
+							<li><a href="">消息通知</a></li>
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</header>
+	<!--end header -->
+
+<!-- start banner_x -->
+		<div class="banner_x center">
+			<a href="./index.html" target="_blank"><div class="logo fl"></div></a>
+			<a href=""><div class="ad_top fl"></div></a>
+			<div class="nav fl">
+				<ul class="clearfix" id="nav_list">
+					<li>
+						<a href="#" target="_blank">小米手机</a>
+					
+						<ol class="children-list clearfix">
+								
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai2.png" />
+										<p>100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai1.png" />
+										<p>100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai3.png">
+										<p>100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+											<img src="static/itying/image/pinpai4.png">
+											<p>100元</p>
+									</a>
+								</li>
+									
+						</ol>
+					
+					</li>
+					<li>
+						
+						<a href="">红米</a>
+
+						<ol class="children-list clearfix">
+								
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai2.png" />
+										<p>红米100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai1.png" />
+										<p>红米100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="static/itying/image/pinpai3.png">
+										<p>红米100元</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+											<img src="static/itying/image/pinpai4.png">
+											<p>红米100元</p>
+									</a>
+								</li>
+									
+						</ol>
+					
+					
+					
+					</li>
+					<li><a href="">平板·笔记本</a></li>
+					<li><a href="">电视</a></li>
+					<li><a href="">盒子·影音</a></li>
+					<li><a href="">路由器</a></li>
+					<li><a href="">智能硬件</a></li>
+					<li><a href="">服务</a></li>
+					<li><a href="">社区</a></li>
+				</ul>
+			</div>
+			<div class="search fr">
+				<form action="" method="post">
+					<div class="text fl">
+						<input type="text" class="shuru"  placeholder="小米6&nbsp;小米MIX现货">
+					</div>
+					<div class="submit fl">
+						<input type="submit" class="sousuo" value="搜索"/>
+					</div>
+					<div class="clear"></div>
+				</form>
+				<div class="clear"></div>
+			</div>
+		</div>
+<!-- end banner_x -->
+{{end}}

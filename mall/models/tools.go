@@ -11,8 +11,9 @@ import (
 	"path"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
-
+	. "github.com/hunterhug/go_image"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/ini.v1"
@@ -129,6 +130,10 @@ func FormatImg(str string) string {
 	return "/" + str
 }
 
+func Sub(a int, b int) int {
+	return a - b
+}
+
 func LocalUploadImg(ctx *gin.Context, picName string) (string, error) {
 	// 1.获取上传的文件
 	file, err := ctx.FormFile(picName)
@@ -221,3 +226,18 @@ func OssUpload(file *multipart.FileHeader, dst string) (string, error) {
 	return dst, nil
 }
 
+// 生成商品缩略图
+func ResizeGoodsImage(filename string) {
+	extname := path.Ext(filename)
+	thumbnailSize := GetSettingFromColum("ThumbnailSize")
+	thumbnailSizeSlice := strings.Split(thumbnailSize, ",")
+	for i := 0; i < len(thumbnailSizeSlice); i++ {
+		savepath := filename + "_" + thumbnailSizeSlice[i] + "x" + thumbnailSizeSlice[i] + extname
+		w, _ := Int(thumbnailSizeSlice[i])
+		err := ThumbnailF2F(filename, savepath, w, w)
+		if err != nil {
+			// 写个日志模块，处理日志
+			fmt.Println(err)
+		}
+	}
+}

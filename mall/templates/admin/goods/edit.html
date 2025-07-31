@@ -174,7 +174,7 @@
                                         {{$goodsColor:=.goodsColorList}}
                                         {{range $key,$value := .goodsImageList}}
                                             <li>
-                                                <img  src="{{$value.ImgUrl}}" class="pic" />  
+                                                <img  src="{{$value.ImgUrl | FormatImg}}" class="pic" />  
                                                 <div class="color_list">
                                                     <select class="relation_goods_color" goods_image_id="{{$value.Id}}">
                                                         <option value="0">关联颜色</option>
@@ -213,7 +213,7 @@
         language: 'zh_cn',  //要使用语言包首先需要引入 ，还要注意下划线
         // toolbarButtons: [ ['undo', 'redo'], ['bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', 'outdent', 'indent', 'clearFormatting', 'insertTable', 'html'] ],
         // toolbarButtonsXS: [ ['undo', 'redo'], ['bold', 'italic', 'underline'] ]
-        imageUploadURL: '/admin/goods/imageUpload'
+        imageUploadURL: '/admin/goods/editImageUpload'
     });
     //获取商品类型属性
     $(function () {
@@ -252,7 +252,7 @@
     //批量上传图片
     $(function () {
         $('#photoUploader').diyUpload({
-            url: '/admin/goods/imageUpload',
+            url: '/admin/goods/goodsImageUpload',
             success: function (response) {
                 // console.info( data );
                 var photoStr = '<input type="hidden" name="goods_image_list" value=' + response.link + ' />';

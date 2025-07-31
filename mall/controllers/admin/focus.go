@@ -77,7 +77,7 @@ func (c FocusController) Edit(ctx *gin.Context) {
 }
 
 func (c FocusController) DoEdit(ctx *gin.Context) {
-	id, _ := models.Int(ctx.Query("id"))
+	id, _ := models.Int(ctx.PostForm("id"))
 	title := ctx.PostForm("title")
 	focusType, err := models.Int(ctx.PostForm("focus_type"))
 	if err != nil {
@@ -106,7 +106,7 @@ func (c FocusController) DoEdit(ctx *gin.Context) {
 	focus.Sort = sort
 	focus.Status = status
 	focus.UpdateTime = models.GetUnix()
-	if focus.FocusImg != "" {
+	if len(focusImg) != 0 {
 		focus.FocusImg = focusImg	
 	}
 	if err := models.DB.Save(&focus).Error; err != nil {

@@ -9,11 +9,11 @@ func DefaultRoutersInit(r *gin.Engine) {
 	defaultRouters := r.Group("/")
 	{
 		defaultRouters.GET("", occ.DefaultController{}.Index)
-		defaultRouters.GET("/thumbnailv1", occ.DefaultController{}.ThumbnailV1)
-		defaultRouters.GET("/thumbnailv2", occ.DefaultController{}.ThumbnailV2)
 
-		defaultRouters.GET("/qrcodev1", occ.DefaultController{}.QrcodeV1)
-		defaultRouters.GET("/qrcodev2", occ.DefaultController{}.QrcodeV2)
+		// defaultRouters.GET("/thumbnailv1", occ.DefaultController{}.ThumbnailV1)
+		// defaultRouters.GET("/thumbnailv2", occ.DefaultController{}.ThumbnailV2)
+		// defaultRouters.GET("/qrcodev1", occ.DefaultController{}.QrcodeV1)
+		// defaultRouters.GET("/qrcodev2", occ.DefaultController{}.QrcodeV2)
 
 	}
 }

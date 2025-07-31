@@ -17,6 +17,8 @@
                                     data-toggle="tab">通用信息</a></li>
                             <li role="presentation"><a href="#oss" role="tab" data-toggle="tab">OSS云存储配置</a></li>
 
+                            <li role="presentation"><a href="#thumb" role="tab" data-toggle="tab">缩略图</a></li>
+
                         </ul>
 
                         <div class="tab-content">
@@ -30,7 +32,7 @@
                                         <input type="file" name="site_logo"/>   
                                         <br />       
                                         {{if ne .setting.SiteLogo ""}}              
-                                        <span></span>    <img style="height:30px" class="pic" src="{{.setting.SiteLogo | FormatImg}}" />  
+                                        <span></span>    <img style="width:80px" class="pic" src="{{.setting.SiteLogo | FormatImg}}" />  
                                         {{end}}                           
                                      </li>                     
             
@@ -41,7 +43,7 @@
                                     <li><span>商品默认图片:</span>  <input type="file" name="no_picture" />   
                                         <br />                     
                                         {{if ne .setting.NoPicture ""}}
-                                        <span></span> <img class="pic" style="width:80px"  src="{{.setting.NoPicture | FormatImg}}" />
+                                        <span></span> <img class="pic" style="width:80px"  src="{{.setting.NoPicture  | FormatImg}}" />
                                         {{end}}                            
                                     </li> 
                                      <li> <span>备案信息:</span> <input type="text" class="input" name="site_icp" value="{{.setting.SiteIcp}}"/></li>
@@ -59,23 +61,33 @@
                             <div role="tabpanel" class="tab-pane" id="oss">
                                 <ul class="form_input">
                                     <li>  <span>是否开启Oss: </span>
-                                        <input type="radio" name="oss_status" {{if eq .setting.OssStatus 1}} checked {{end}} value="1" id="a"/> <label for="a">是</label>    　
-                                        
-                                        <input type="radio" name="oss_status" {{if eq .setting.OssStatus 0}} checked {{end}} value="0" id="b"/><label for="b">否</label> 　</li>
-
+                                       
+                                      此设置为安全设置，需要在conf/app.ini中设置
 
                                     <li>
                                         <span>BucketName:</span> <input type="text" class="input" name="bucket_name" value="{{.setting.BucketName}}"/>
                                     </li>
                                     <li>
-                                        <span>Appid:</span> <input type="text" class="input" name="appid" value="{{.setting.Appid}}"/>
+                                        <span>Appid:</span> <input type="text" class="input" name="appid" value="{{.setting.Appid}}"/>  <i>注意：请设置为自己的Appid</i>
                                     </li>
                                     <li>
-                                        <span>AppSecret:</span> <input type="text" class="input" name="app_secret" value="{{.setting.AppSecret}}"/>
+                                        <span>AppSecret:</span> <input type="text" class="input" name="app_secret" value="{{.setting.AppSecret}}"/> <i>注意：请设置为自己的AppSecret</i>
                                     </li>            
                                     <li>
                                         <span>EndPoint:</span> <input type="text" class="input" name="end_point" value="{{.setting.EndPoint}}"/>
                                     </li>
+                                    <li>
+                                        <span>Oss域名:</span> <input type="text" class="input" name="oss_domain" value="{{.setting.OssDomain}}"/> <i>注意：域名后面需要加上/,如：http://www.itying.com/</i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="thumb">
+                                <ul class="form_input">
+                                      
+                                    <li>
+                                        <span>缩略图尺寸:</span> <input type="text" class="input" name="thumbnail_size" value="{{.setting.ThumbnailSize}}"/> <i>如：200,300,400 这样的话将会生成200x200 300x300以及400x400的图片</i>
+                                    </li>
+                               
                                 </ul>
                             </div>
                         </div>
