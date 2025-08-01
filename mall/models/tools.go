@@ -134,6 +134,23 @@ func Sub(a int, b int) int {
 	return a - b
 }
 
+// 截取字符串
+func Substr(str string, start int, end int) string {
+	rs := []rune(str)
+	rl := len(rs)
+	if start < 0 || start > rl {
+		start = 0
+	}
+	if end < 0 || end > rl {
+		end = rl
+	}
+	if start > end {
+		start, end = end, start
+	}
+	return string(rs[start:end])
+}
+
+
 func LocalUploadImg(ctx *gin.Context, picName string) (string, error) {
 	// 1.获取上传的文件
 	file, err := ctx.FormFile(picName)
@@ -229,7 +246,7 @@ func OssUpload(file *multipart.FileHeader, dst string) (string, error) {
 // 生成商品缩略图
 func ResizeGoodsImage(filename string) {
 	extname := path.Ext(filename)
-	thumbnailSize := GetSettingFromColum("ThumbnailSize")
+	thumbnailSize := strings.ReplaceAll(GetSettingFromColum("ThumbnailSize"), "，", ",")
 	thumbnailSizeSlice := strings.Split(thumbnailSize, ",")
 	for i := 0; i < len(thumbnailSizeSlice); i++ {
 		savepath := filename + "_" + thumbnailSizeSlice[i] + "x" + thumbnailSizeSlice[i] + extname

@@ -11,6 +11,7 @@ type Nav struct {
 	Status     int
 	AddTime    int64
 	UpdateTime int64
+	GoodsItems []Goods `gorm:"-"` // 忽略本字段
 }
 
 func (Nav) TableName() string {

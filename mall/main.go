@@ -16,9 +16,10 @@ func main() {
 	//自定义模板函数  注意要把这个函数放在加载模板前
 	r.SetFuncMap(template.FuncMap{
 		"UnixToTime": models.UnixToTime,
-		"Str2Html": models.Str2Html,
-		"FormatImg": models.FormatImg,
-		"Sub": models.Sub,
+		"Str2Html":   models.Str2Html,
+		"FormatImg":  models.FormatImg,
+		"Sub":        models.Sub,
+		"Substr":     models.Substr,
 	})
 	//加载模板 放在配置路由前面
 	r.LoadHTMLGlob("templates/**/**/*")

@@ -19,7 +19,7 @@
 								{{range $k,$v := $value.GoodsCateItems}}
 									<li>
 										<div class="xuangou_left">
-											<a href="{{$v.Link}}" class="clearfix">
+											<a href="#" class="clearfix">
 												<div class="img fl"><img src="{{$v.CateImg | FormatImg}}" alt="{{$v.Title}}"></div>
 												<span class="fl">{{$v.Title}}</span>									
 											</a>
@@ -43,7 +43,7 @@
 					{{range $key,$value := .focusList}}
 						<div class="swiper-slide">
 							<a href="{{$value.Link}}" target="_blank">
-								<img src="{{$value.FocusImg | FormatImg}}" alt="{{$value.Title}}" height="600" />
+								<img src="{{$value.FocusImg | FormatImg}}" alt="{{$value.Title}}" />
 							</a>
 						</div>
 					{{end}}
@@ -124,109 +124,29 @@
 
 
 				<div class="category_item_left">
-
 					<img src="static/itying/image/shouji.jpg" alt="手机">
 				</div>
 
 
 				<div class="category_item_right">
 						
+											
 
-								<div class="hot fl">
-										<div class="xinpin"><span>新品</span></div>
-										<div class="tu"><a href=""><img src="./static/itying/image/peijian2.jpg"></a></div>
-										<div class="miaoshu"><a href="">小米6 硅胶保护套</a></div>
-										<div class="jiage">49元</div>
-										<div class="pingjia">372人评价</div>
-										<div class="piao">
-											<a href="">
-												<span>发货速度很快！很配小米6！</span>
-												<span>来至于mi狼牙的评价</span>
-											</a>
-										</div>
-								</div>
-								<div class="hot fl">
-										<div class="xinpin"><span>新品</span></div>
-										<div class="tu"><a href=""><img src="./static/itying/image/peijian2.jpg"></a></div>
-										<div class="miaoshu"><a href="">小米6 硅胶保护套</a></div>
-										<div class="jiage">49元</div>
-										<div class="pingjia">372人评价</div>
-										<div class="piao">
-											<a href="">
-												<span>发货速度很快！很配小米6！</span>
-												<span>来至于mi狼牙的评价</span>
-											</a>
-										</div>
-								</div>
-								<div class="hot fl">
-										<div class="xinpin"><span>新品</span></div>
-										<div class="tu"><a href=""><img src="./static/itying/image/peijian2.jpg"></a></div>
-										<div class="miaoshu"><a href="">小米6 硅胶保护套</a></div>
-										<div class="jiage">49元</div>
-										<div class="pingjia">372人评价</div>
-										<div class="piao">
-											<a href="">
-												<span>发货速度很快！很配小米6！</span>
-												<span>来至于mi狼牙的评价</span>
-											</a>
-										</div>
-								</div>
-								<div class="hot fl">
-										<div class="xinpin"><span>新品</span></div>
-										<div class="tu"><a href=""><img src="./static/itying/image/peijian2.jpg"></a></div>
-										<div class="miaoshu"><a href="">小米6 硅胶保护套</a></div>
-										<div class="jiage">49元</div>
-										<div class="pingjia">372人评价</div>
-										<div class="piao">
-											<a href="">
-												<span>发货速度很快！很配小米6！</span>
-												<span>来至于mi狼牙的评价</span>
-											</a>
-										</div>
-								</div>
-	
-								<div class="hot fl">
-									<div class="xinpin"><span style="background:#fff"></span></div>
-									<div class="tu"><a href=""><img src="./static/itying/image/peijian3.jpg"></a></div>
-									<div class="miaoshu"><a href="">小米手机4c 小米4c 智能</a></div>
-									<div class="jiage">29元</div>
-									<div class="pingjia">372人评价</div>
-								</div>
-								
-								<div class="hot fl">
+								{{range $key,$value := .phoneList}}
+									<div class="hot fl">
 										<div class="xinpin"><span style="background:#fff"></span></div>
-										<div class="tu"><a href=""><img src="./static/itying/image/peijian3.jpg"></a></div>
-										<div class="miaoshu"><a href="">小米手机4c 小米4c 智能</a></div>
-										<div class="jiage">29元</div>
+										<div class="tu"><a href="#"><img src="{{$value.GoodsImg | FormatImg}}"></a></div>
+										<div class="miaoshu"><a href="#">{{$value.Title}}</a></div>
+										<div class="jiage">{{$value.Price}}元</div>
 										<div class="pingjia">372人评价</div>
+										<div class="piao">
+											<a href="">
+												<span>{{Substr $value.SubTitle 0 20}}</span>											
+											</a>
+										</div>
 									</div>
-								<div class="hot fl">
-									<div class="xinpin"><span style="background:red">享6折</span></div>
-									<div class="tu"><a href=""><img src="./static/itying/image/peijian4.jpg"></a></div>
-									<div class="miaoshu"><a href="">红米NOTE 4X 红米note4X</a></div>
-									<div class="jiage">19元</div>
-									<div class="pingjia">372人评价</div>
-									<div class="piao">
-										<a href="">
-											<span>发货速度很快！很配小米6！</span>
-											<span>来至于mi狼牙的评价</span>
-										</a>
-									</div>
-								</div>
-								<div class="hot fl">
-									<div class="xinpin"><span style="background:#fff"></span></div>
-									<div class="tu"><a href=""><img src="./static/itying/image/peijian5.jpg"></a></div>
-									<div class="miaoshu"><a href="">小米支架式自拍杆</a></div>
-									<div class="jiage">89元</div>
-									<div class="pingjia">372人评价</div>
-									<div class="piao">
-										<a href="">
-											<span>发货速度很快！很配小米6！</span>
-											<span>来至于mi狼牙的评价</span>
-										</a>
-									</div>
-								</div>
-
+								{{end}}
+								
 						
 							
 				</div>

@@ -34,8 +34,8 @@ func (c GoodsController) Index(ctx *gin.Context) {
 	// 每页查询的数量
 	pageSize := 5
 	goodsList := []models.Goods{}
-	models.DB.Where(where).Offset((page-1)*pageSize).Limit(pageSize).Find(&goodsList)
-	
+	models.DB.Where(where).Offset((page - 1) * pageSize).Limit(pageSize).Find(&goodsList)
+
 	// 获取总数量
 	var count int64
 	models.DB.Where(where).Table("goods").Count(&count)
@@ -43,20 +43,20 @@ func (c GoodsController) Index(ctx *gin.Context) {
 	if len(goodsList) == 0 {
 		if page == 1 {
 			ctx.HTML(http.StatusOK, "admin/goods/index.html", gin.H{
-				"goodsList": goodsList,
-				"totalPages": math.Ceil(float64(count)/float64(pageSize)),
-				"page": page,
-				"keyword": keyword,
+				"goodsList":  goodsList,
+				"totalPages": math.Ceil(float64(count) / float64(pageSize)),
+				"page":       page,
+				"keyword":    keyword,
 			})
 		}
 		ctx.Redirect(302, "/admin/goods")
 		return
 	}
 	ctx.HTML(http.StatusOK, "admin/goods/index.html", gin.H{
-		"goodsList": goodsList,
-		"totalPages": math.Ceil(float64(count)/float64(pageSize)),
-		"page": page,
-		"keyword": keyword,
+		"goodsList":  goodsList,
+		"totalPages": math.Ceil(float64(count) / float64(pageSize)),
+		"page":       page,
+		"keyword":    keyword,
 	})
 }
 
@@ -64,7 +64,7 @@ func (c GoodsController) Add(ctx *gin.Context) {
 	// 获取商品分类
 	goodsCateList := []models.GoodsCate{}
 	models.DB.Where("pid = ?", 0).Preload("GoodsCateItems").Find(&goodsCateList)
-	
+
 	// 获取所有颜色信息
 	goodsColorlist := []models.GoodsColor{}
 	models.DB.Find(&goodsColorlist)
@@ -74,9 +74,9 @@ func (c GoodsController) Add(ctx *gin.Context) {
 	models.DB.Find(&goodsTypeList)
 
 	ctx.HTML(http.StatusOK, "admin/goods/add.html", gin.H{
-		"goodsCateList": goodsCateList,
+		"goodsCateList":  goodsCateList,
 		"goodsColorList": goodsColorlist,
-		"goodsTypeList": goodsTypeList,
+		"goodsTypeList":  goodsTypeList,
 	})
 }
 
@@ -111,47 +111,47 @@ func (c GoodsController) DoAdd(ctx *gin.Context) {
 	goodsColorStr := strings.Join(goodsColorArr, ",")
 
 	// 上传图片，生成缩略图
-	goodsImg, _ := models.UploadImg(ctx, "pic")
+	goodsImg, _ := models.UploadImg(ctx, "goods_img")
 	if len(goodsImg) > 0 {
 		// 判断本地图片才需要处理
 		if models.GetOssStatus() != 1 {
 			wg.Add(1)
-			go func ()  {
+			go func() {
 				models.ResizeGoodsImage(goodsImg)
-				wg.Done()	
+				wg.Done()
 			}()
 		}
 	}
 
 	// 增加商品数据
 	goods := models.Goods{
-		Title: title,
-		SubTitle: subTitle,
-		GoodsSn: goodsSn,
-		CateId: cateId,
-		ClickCount: 100,
-		GoodsNumber: goodsNumber,
-		MarketPrice: marketPrice,
-		Price: price,
+		Title:         title,
+		SubTitle:      subTitle,
+		GoodsSn:       goodsSn,
+		CateId:        cateId,
+		ClickCount:    100,
+		GoodsNumber:   goodsNumber,
+		MarketPrice:   marketPrice,
+		Price:         price,
 		RelationGoods: relationGoods,
-		GoodsAttr: goodsAttr,
-		GoodsVersion: goodsVersion,
-		GoodsGift: goodsGift,
-		GoodsFitting: goodsFitting,
+		GoodsAttr:     goodsAttr,
+		GoodsVersion:  goodsVersion,
+		GoodsGift:     goodsGift,
+		GoodsFitting:  goodsFitting,
 		GoodsKeywords: goodsKeywords,
-		GoodsDesc: goodsDesc,
-		GoodsContent: goodsContent,
-		IsDelete: isDelete,
-		IsHot: isHot,
-		IsBest: isBest,
-		IsNew: isNew,
-		GoodsTypeId: goodsTypeId,
-		Sort: sort,
-		Status: status,
-		GoodsColor: goodsColorStr,
-		GoodsImg: goodsImg,
-		AddTime: now,
-		UpdateTime: now,
+		GoodsDesc:     goodsDesc,
+		GoodsContent:  goodsContent,
+		IsDelete:      isDelete,
+		IsHot:         isHot,
+		IsBest:        isBest,
+		IsNew:         isNew,
+		GoodsTypeId:   goodsTypeId,
+		Sort:          sort,
+		Status:        status,
+		GoodsColor:    goodsColorStr,
+		GoodsImg:      goodsImg,
+		AddTime:       now,
+		UpdateTime:    now,
 	}
 	err := models.DB.Create(&goods).Error
 	if err != nil {
@@ -175,7 +175,6 @@ func (c GoodsController) DoAdd(ctx *gin.Context) {
 		}
 		wg.Done()
 	}()
-	
 
 	// 增加规格包装
 	wg.Add(1)
@@ -225,7 +224,7 @@ func (c GoodsController) Edit(ctx *gin.Context) {
 	goodsCateList := []models.GoodsCate{}
 	models.DB.Where("pid = ?", 0).Preload("GoodsCateItems").Find(&goodsCateList)
 
-	// 获取所有颜色信息 
+	// 获取所有颜色信息
 	goodsColorSlice := strings.Split(goods.GoodsColor, ",")
 	goodsColorMap := make(map[string]string)
 	for _, v := range goodsColorSlice {
@@ -276,18 +275,18 @@ func (c GoodsController) Edit(ctx *gin.Context) {
 			goodsAttrStr += `</li>`
 		}
 	}
-	
+
 	// 获取上一页的地址
 	// fmt.Println(ctx.Request.Referer())
 
 	ctx.HTML(http.StatusOK, "admin/goods/edit.html", gin.H{
-		"goods": goods,
-		"goodsCateList": goodsCateList, 
+		"goods":          goods,
+		"goodsCateList":  goodsCateList,
 		"goodsColorList": goodsColorList,
-		"goodsTypeList": goodsTypeList,
-		"goodsAttrStr": goodsAttrStr,
+		"goodsTypeList":  goodsTypeList,
+		"goodsAttrStr":   goodsAttrStr,
 		"goodsImageList": goodsImageList,
-		"prevPage": ctx.Request.Referer(),
+		"prevPage":       ctx.Request.Referer(),
 	})
 }
 
@@ -329,7 +328,7 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 
 	goods := models.Goods{Id: id}
 	models.DB.Find(&goods)
-	goods.Title = title 
+	goods.Title = title
 	goods.SubTitle = subTitle
 	goods.GoodsSn = goodsSn
 	goods.CateId = cateId
@@ -362,11 +361,11 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 			wg.Add(1)
 			go func() {
 				models.ResizeGoodsImage(goodsImg)
-				wg.Done()	
+				wg.Done()
 			}()
 		}
 	}
-	
+
 	err = models.DB.Save(&goods).Error
 	if err != nil {
 		c.Error(ctx, "修改失败", "/admin/goods/edit?id="+models.String(id))
@@ -389,7 +388,6 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 		}
 		wg.Done()
 	}()
-	
 
 	// 修改规格包装
 	// 1.删除当前商品下面的规格包装
@@ -427,7 +425,7 @@ func (c GoodsController) DoEdit(ctx *gin.Context) {
 	}()
 	wg.Wait()
 	if len(prevPage) == 0 {
-		c.Success(ctx, "修改数据成功", "/admin/goods")	
+		c.Success(ctx, "修改数据成功", "/admin/goods")
 		return
 	}
 	c.Success(ctx, "修改数据成功", prevPage)
@@ -446,9 +444,9 @@ func (c GoodsController) EditImageUpload(ctx *gin.Context) {
 	}
 	if models.GetOssStatus() != 1 {
 		wg.Add(1)
-		go func ()  {
+		go func() {
 			models.ResizeGoodsImage(imageDir)
-			wg.Done()	
+			wg.Done()
 		}()
 		ctx.JSON(http.StatusOK, gin.H{
 			"link": "/" + imageDir,
@@ -473,9 +471,9 @@ func (c GoodsController) GoodsImageUpload(ctx *gin.Context) {
 	}
 	if models.GetOssStatus() != 1 {
 		wg.Add(1)
-		go func ()  {
+		go func() {
 			models.ResizeGoodsImage(imageDir)
-			wg.Done()	
+			wg.Done()
 		}()
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -487,8 +485,8 @@ func (c GoodsController) GoodsTypeAttribute(ctx *gin.Context) {
 	cateId, err := models.Int(ctx.Query("cateId"))
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"success": false, 
-			"result": "",
+			"success": false,
+			"result":  "",
 		})
 		return
 	}
@@ -496,14 +494,14 @@ func (c GoodsController) GoodsTypeAttribute(ctx *gin.Context) {
 	err = models.DB.Where("cate_id = ?", cateId).Find(&goodsTypeAttributeList).Error
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"success": false, 
-			"result": "",
+			"success": false,
+			"result":  "",
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"success": true, 
-		"result": goodsTypeAttributeList,
+		"success": true,
+		"result":  goodsTypeAttributeList,
 	})
 }
 
@@ -513,7 +511,7 @@ func (c GoodsController) ChangeGoodsImageColor(ctx *gin.Context) {
 	goodsImageId, err := models.Int(ctx.Query("goods_image_id"))
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"result":"获取goods_image_id失败",
+			"result":  "获取goods_image_id失败",
 			"success": false,
 		})
 		return
@@ -521,7 +519,7 @@ func (c GoodsController) ChangeGoodsImageColor(ctx *gin.Context) {
 	colorId, err := models.Int(ctx.Query("color_id"))
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"result":"获取color_id失败",
+			"result":  "获取color_id失败",
 			"success": false,
 		})
 		return
@@ -532,13 +530,13 @@ func (c GoodsController) ChangeGoodsImageColor(ctx *gin.Context) {
 	err = models.DB.Save(&goodsImage).Error
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"result":"更新失败",
+			"result":  "更新失败",
 			"success": false,
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"result":"更新成功",
+		"result":  "更新成功",
 		"success": true,
 	})
 }
@@ -549,7 +547,7 @@ func (c GoodsController) RemoveGoodsImage(ctx *gin.Context) {
 	goodsImageId, err := models.Int(ctx.Query("goods_image_id"))
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"result":"获取数据失败",
+			"result":  "获取数据失败",
 			"success": false,
 		})
 		return
@@ -558,13 +556,13 @@ func (c GoodsController) RemoveGoodsImage(ctx *gin.Context) {
 	err = models.DB.Delete(&goodsImage).Error
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
-			"result":"删除图库失败",
+			"result":  "删除图库失败",
 			"success": false,
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"result":"删除图库成功",
+		"result":  "删除图库成功",
 		"success": true,
 	})
 }
